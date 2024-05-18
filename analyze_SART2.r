@@ -18,6 +18,7 @@ outputN <- NULL
 outputAccuracy <- NULL
 outputErrorCom <- NULL
 outputErrorOmi <- NULL
+outputSD <- NULL
 
 for (i in 1:length(d[, 1])) {
   if (!is.na(d[i, 1]) & file.info(d[i, 1])$size > 0) {
@@ -80,6 +81,7 @@ for (i in 1:length(d[, 1])) {
     outputdataAccuracy <- numeric()
     outputdataErrorCom <- numeric()
     outputdataErrorOmi <- numeric()
+    outputdataSD <- numeric()
     
     psytkTrim <- function(x, xsd = 3, low = NA, high = NA) {
       y <- x
@@ -155,6 +157,7 @@ for (i in 1:length(d[, 1])) {
       cat("Median value  :", median(tmpRtData), "\n")
       cat("Min value     :", min(tmpRtData), "\n")
       cat("Max value     :", max(tmpRtData), "\n")
+      cat("Standard Deviation:", sd(tmpRtData), "\n")
       
       total_trials <- sum(selection)
       correct_trials <- sum(selection & CORRECT)
@@ -178,6 +181,7 @@ for (i in 1:length(d[, 1])) {
       outputdataAccuracy <- c(outputdataAccuracy, accuracy)
       outputdataErrorCom <- c(outputdataErrorCom, error_com)
       outputdataErrorOmi <- c(outputdataErrorOmi, error_omi)
+      outputdataSD <- c(outputdataSD, sd(tmpRtData))
     }
     
     sink()
@@ -190,6 +194,7 @@ for (i in 1:length(d[, 1])) {
     outputAccuracy <- rbind(outputAccuracy, outputdataAccuracy)
     outputErrorCom <- rbind(outputErrorCom, outputdataErrorCom)
     outputErrorOmi <- rbind(outputErrorOmi, outputdataErrorOmi)
+    outputSD <- rbind(outputSD, outputdataSD)
   }
 }
 
@@ -203,6 +208,7 @@ colnames(outputN) <- conditionnames
 colnames(outputAccuracy) <- conditionnames
 colnames(outputErrorCom) <- conditionnames
 colnames(outputErrorOmi) <- conditionnames
+colnames(outputSD) <- conditionnames
 
 outputMean2 <- matrix(ncol=length(conditionnames), nrow=length(d[,1]))
 outputMedian2 <- matrix(ncol=length(conditionnames), nrow=length(d[,1]))
@@ -212,6 +218,7 @@ outputN2 <- matrix(ncol=length(conditionnames), nrow=length(d[,1]))
 outputAccuracy2 <- matrix(ncol=length(conditionnames), nrow=length(d[,1]))
 outputErrorCom2 <- matrix(ncol=length(conditionnames), nrow=length(d[,1]))
 outputErrorOmi2 <- matrix(ncol=length(conditionnames), nrow=length(d[,1]))
+outputSD2 <- matrix(ncol=length(conditionnames), nrow=length(d[,1]))
 
 colnames(outputMean2) <- conditionnames
 colnames(outputMedian2) <- conditionnames
@@ -221,6 +228,7 @@ colnames(outputN2) <- conditionnames
 colnames(outputAccuracy2) <- conditionnames
 colnames(outputErrorCom2) <- conditionnames
 colnames(outputErrorOmi2) <- conditionnames
+colnames(outputSD2) <- conditionnames
 
 counter <- 1
 for (i in 1:length(d[, 1])) {
@@ -233,6 +241,7 @@ for (i in 1:length(d[, 1])) {
     outputAccuracy2[i, ] <- rep(NA, length(conditionnames))
     outputErrorCom2[i, ] <- rep(NA, length(conditionnames))
     outputErrorOmi2[i, ] <- rep(NA, length(conditionnames))
+    outputSD2[i, ] <- rep(NA, length(conditionnames))
   } else {
     outputMean2[i, ] <- outputMean[counter, ]
     outputMedian2[i, ] <- outputMedian[counter, ]
@@ -242,6 +251,7 @@ for (i in 1:length(d[, 1])) {
     outputAccuracy2[i, ] <- outputAccuracy[counter, ]
     outputErrorCom2[i, ] <- outputErrorCom[counter, ]
     outputErrorOmi2[i, ] <- outputErrorOmi[counter, ]
+    outputSD2[i, ] <- outputSD[counter, ]
     counter <- counter + 1
   }
 }
@@ -255,3 +265,4 @@ for (i in 1:length(d[, 1])) {
 # write.csv(outputAccuracy2, "file_accuracy.csv", row.names = FALSE)
 # write.csv(outputErrorCom2, "file_error_com.csv", row.names = FALSE)
 # write.csv(outputErrorOmi2, "file_error_omi.csv", row.names = FALSE)
+# write.csv(outputSD2, "file_sd.csv", row.names = FALSE)
